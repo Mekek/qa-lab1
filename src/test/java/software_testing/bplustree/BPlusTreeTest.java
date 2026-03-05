@@ -44,4 +44,90 @@ public class BPlusTreeTest {
         Assertions.assertFalse(nf);
         Assertions.assertTrue(tree.getTrace().contains("SEARCH_NOT_FOUND"));
     }
+
+    @Test
+    public void testInsertDuplicateKeyBranch() {
+        BPlusTree tree = new BPlusTree(7);
+        tree.insert(10);
+
+        tree.clearTrace();
+        tree.insert(10); // повторная вставка
+
+        List<String> t = tree.getTrace();
+
+        Assertions.assertTrue(t.contains("START_INSERT"));
+        Assertions.assertTrue(t.contains("FIND_LEAF"));
+        // INSERT_IN_LEAF не должно появиться
+        Assertions.assertFalse(t.contains("INSERT_IN_LEAF"));
+    }
+
+    @Test
+    public void testRootSplitBranch() {
+        BPlusTree tree = new BPlusTree(3);
+
+        tree.insert(1);
+        tree.insert(2);
+        tree.insert(3);
+
+        tree.clearTrace();
+        tree.insert(4); // вызовет split корня
+
+        List<String> t = tree.getTrace();
+
+        Assertions.assertTrue(t.contains("LEAF_OVERFLOW"));
+        Assertions.assertTrue(t.contains("LEAF_SPLIT"));
+        Assertions.assertTrue(t.contains("PROMOTE_ROOT"));
+        Assertions.assertTrue(t.contains("ROOT_SPLIT"));
+    }
+
+    @Test
+    public void testPromoteKeyBranch() {
+        BPlusTree tree = new BPlusTree(3);
+
+        // создаем структуру с внутренним узлом
+        for (int k : new int[]{1,2,3,4}) {
+            tree.insert(k);
+        }
+
+        tree.clearTrace();
+        tree.insert(5);
+
+        List<String> t = tree.getTrace();
+
+        Assertions.assertTrue(t.contains("PROMOTE_KEY"));
+    }
+
+    @Test
+    public void testInternalOverflowBranch() {
+        BPlusTree tree = new BPlusTree(3);
+
+        for (int i = 1; i <= 10; i++) {
+            tree.insert(i);
+        }
+
+        tree.clearTrace();
+        tree.insert(11);
+
+        List<String> t = tree.getTrace();
+
+        Assertions.assertTrue(t.contains("INTERNAL_OVERFLOW") || t.contains("INTERNAL_SPLIT"));
+    }
+
+    @Test
+    public void testInsertIntoDifferentLeaves() {
+        BPlusTree tree = new BPlusTree(3);
+
+        tree.insert(10);
+        tree.insert(20);
+        tree.insert(30);
+        tree.insert(40);
+
+        tree.clearTrace();
+        tree.insert(25);
+
+        List<String> t = tree.getTrace();
+
+        Assertions.assertTrue(t.contains("START_INSERT"));
+        Assertions.assertTrue(t.contains("FIND_LEAF"));
+    }
 }

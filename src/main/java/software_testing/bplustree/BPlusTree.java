@@ -4,11 +4,11 @@ import java.util.*;
 
 public class BPlusTree {
 
-    public final int MAX_KEYS; // максимальное количество ключей в узле (например 7)
+    public final int MAX_KEYS; // максимальное количество ключей в узле
 
     private Node root; // корень дерева
 
-    // список событий алгоритма — нужен для тестирования (trace)
+    // список событий алгоритма
     private final List<String> trace = new ArrayList<>();
 
 
@@ -31,7 +31,7 @@ public class BPlusTree {
 
         Node n = root;
 
-        // спускаемся вниз по дереву пока не дойдём до листа
+        // спускаемся по дереву пока не дойдём до листа
         while (!(n instanceof LeafNode)) {
             InternalNode in = (InternalNode)n;
             int idx = in.findChildIndex(key);
@@ -74,7 +74,7 @@ public class BPlusTree {
 
                 trace.add("LEAF_SPLIT");
 
-                // первый ключ правого узла поднимается вверх
+                // первый ключ правого узла поднимается
                 int promoteKey = sibling.keys.get(0);
 
                 promoteUp(leaf, sibling, promoteKey);

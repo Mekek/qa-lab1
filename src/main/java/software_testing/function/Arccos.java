@@ -17,7 +17,7 @@ public class Arccos {
             return Math.PI - arccos(-x);
         }
 
-        // если близко к +1 — используем устойчивую формулу
+        // если близко к +1 — используем формулу
         if (x > 0.95) {
             return 2.0 * arcsinSeries(Math.sqrt((1 - x) / 2.0));
         }

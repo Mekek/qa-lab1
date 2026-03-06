@@ -18,13 +18,11 @@ public class BPlusTreeTest {
 
     @Test
     public void testLeafSplitSequenceSmallOrder() {
-        // для контроля используем порядок 3, чтобы быстро получить split
         BPlusTree tree = new BPlusTree(3);
         for (int k : new int[]{1,2,3}) tree.insert(k);
         tree.clearTrace();
         tree.insert(4);
         List<String> t = tree.getTrace();
-        // ожидаем: старт, поиск листа, вставка, переполнение, разделение, продвижение ключа и (потенциально) root split
         Assertions.assertTrue(t.contains("LEAF_OVERFLOW"));
         Assertions.assertTrue(t.contains("LEAF_SPLIT"));
         Assertions.assertTrue(t.contains("PROMOTE_KEY") || t.contains("PROMOTE_ROOT"));
@@ -50,7 +48,12 @@ public class BPlusTreeTest {
         BPlusTree tree = new BPlusTree(7);
 
         tree.insert(5);
+        tree.clearTrace();
+
         tree.insert(5);
+
+        List<String> trace = tree.getTrace();
+        Assertions.assertEquals(List.of("START_INSERT", "FIND_LEAF"), trace);
 
         Assertions.assertTrue(tree.search(5));
     }

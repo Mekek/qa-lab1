@@ -37,4 +37,14 @@ public class TextDomainTest {
             new FordPrefect("", false, "info");
         });
     }
+
+    @Test
+    public void testShipContainsCabin() {
+        VogonShip ship = new VogonShip("Flagship");
+        Cabin cabin = new Cabin("Cabin1");
+
+        ship.addCabin(cabin);
+
+        Assertions.assertTrue(ship.getCabins().contains(cabin));
+    }
 }

@@ -44,4 +44,14 @@ public class BPlusTreeTest {
         Assertions.assertFalse(nf);
         Assertions.assertTrue(tree.getTrace().contains("SEARCH_NOT_FOUND"));
     }
+
+    @Test
+    public void testInsertDuplicate() {
+        BPlusTree tree = new BPlusTree(7);
+
+        tree.insert(5);
+        tree.insert(5);
+
+        Assertions.assertTrue(tree.search(5));
+    }
 }
